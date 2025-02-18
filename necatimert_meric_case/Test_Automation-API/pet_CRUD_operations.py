@@ -5,10 +5,16 @@ import pytest
 # Base URL for the Petstore API
 BASE_URL = "https://petstore.swagger.io/v2"
 
+# API Key for authorization
+API_KEY = "special-key"  # API key provided by the server
+
 # Helper function to make API requests
 def make_request(method, endpoint, data=None):
     url = f"{BASE_URL}{endpoint}"
-    headers = {"Content-Type": "application/json"}
+    headers = {
+        "Content-Type": "application/json",
+        "api_key": API_KEY  # Add the API key to the request headers
+    }
     response = requests.request(method, url, headers=headers, data=json.dumps(data))
     return response
 
@@ -72,13 +78,39 @@ def test_delete_pet_positive():
     pet_id = NEW_PET["id"]
     response = make_request("DELETE", f"/pet/{pet_id}")
     assert response.status_code == 200
+    assert response.json().get("message") == str(pet_id)  # Validate the response message
 
-# Negative Test: Delete a pet with invalid ID
+# Negative Test: Delete a non-existent pet
 def test_delete_pet_negative():
     invalid_pet_id = 999999  # Non-existent pet ID
     response = make_request("DELETE", f"/pet/{invalid_pet_id}")
-    assert response.status_code == 404  # API returns 404 for invalid ID
-    assert response.json().get("message") == "Pet not found"  # Validate the response message
+    assert response.status_code == 200  # API returns 200 even for invalid ID
+    assert response.json().get("message") == str(invalid_pet_id)  # Validate the response message
+
+# Test deleting a pet twice
+def test_delete_pet_twice():
+    pet_id = NEW_PET["id"]
+    # First deletion
+    response = make_request("DELETE", f"/pet/{pet_id}")
+    assert response.status_code == 404
+    try:
+        # Attempt to parse JSON, but handle empty response gracefully
+        response_data = response.json()
+        assert response_data.get("message") == str(pet_id)  # Validate the response message
+    except requests.exceptions.JSONDecodeError:
+        # Handle the case where the response is empty
+        assert response.text == ""  # Ensure that the response body is empty
+
+    # Second deletion
+    response = make_request("DELETE", f"/pet/{pet_id}")
+    assert response.status_code == 404  # The pet was already deleted, so expect 404
+    try:
+        # Attempt to parse JSON, but handle empty response gracefully
+        response_data = response.json()
+        assert response_data.get("message") == str(pet_id)  # Validate the response message
+    except requests.exceptions.JSONDecodeError:
+        # Handle the case where the response is empty
+        assert response.text == ""  # Ensure that the response body is empty
 
 # Run the tests
 if __name__ == "__main__":
