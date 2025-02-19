@@ -1,0 +1,118 @@
+Scenario 1: Search for a Valid Product
+
+Description: Simulate a user searching for a valid product.
+
+Steps:
+
+Navigate to the homepage.
+
+Enter a valid search term (kalem,9999) in the search bar.
+
+Press the search with Enter.
+
+Verify that the search results page loads successfully and displays relevant products.
+--------------------------------------------------------------------------------------------
+Scenario 2: Search for a Valid Product with Submitting the Form
+
+Description: Simulate a user searching for a valid product and Submit the Form.
+
+Steps:
+
+Navigate to the homepage.
+
+Enter a valid search term (kalem) in the search bar.
+
+Submit the search (searchBox.submit();).
+
+Verify that the search results page has element with id "error404"
+------------------------------------------------------------------------------------------------
+Scenario 3: Search for an Invalid Product
+
+Description: Simulate a user searching for an invalid or non-existent product.
+
+Steps:
+
+Navigate to the homepage.
+
+Enter an invalid search term (sdfdashkerfcs) in the search bar.
+
+Press the search with Enter.
+
+Verify that the search results page loads successfully and displays a "no results found" message.
+
+-------------------------------------------------------------------------------------------------
+Scenario 4: Verify the behavior when the search term contains special characters.
+
+Steps:
+
+Navigate to https://www.n11.com/.
+
+Enter a search term with special characters ("kalem#$").
+
+Press the search with Enter.
+
+Expected Result: The system should handle special characters gracefully and return relevant results or display an appropriate message.
+
+---------------------------------------------------------------------------------------------------------------------------------------
+Scenario 5: Verify the behavior when the search term contains multiple keywords.
+
+Steps:
+
+Navigate to https://www.n11.com/.
+
+Enter a search term with multiple keywords (e.g., "KALEM SİLGİ").
+
+Press the search with Enter.
+
+Expected Result: The system should return results that match all or most of the keywords.
+
+-------------------------------------------------------------------------------------------------------------------------------------------
+Scenario: Verify the behavior when the search term contains SQL injection attempts.
+
+Steps:
+
+Navigate to https://www.n11.com/.
+
+Enter a search term with SQL injection (e.g., " OR 1=1 --).
+
+Press the search with Enter.
+
+Expected Result: The system should sanitize the input and return no results or an error message.
+
+---------------------------------------------------------------------------------------------------------------------------------------------
+Scenario: Verify the behavior when the search term contains XSS attempts.
+
+Steps:
+
+Navigate to https://www.n11.com/.
+
+Enter a search term with XSS (e.g., <script>alert('XSS')</script>).
+
+Press the search with Enter.
+
+Expected Result: The system should sanitize the input and return no results or an error message.
+
+-----------------------------------------------------------------------------------------------------------------------------------------------
+
+Scenario: Verify the behavior when the search term contains malicious input.
+
+Steps:
+
+Navigate to https://www.n11.com/.
+
+Enter a search term with malicious input (e.g., "; DROP TABLE products; --).
+
+Press the search with Enter.
+
+Expected Result: The system should sanitize the input and return no results or an error message.
+--------------------------------------------------------------------------------------------------------------------------------------------------
+
+Scenario: Verify the behavior when searching through a large dataset.
+
+Steps:
+
+Populate the database with a large number of products.
+
+Perform a search for a common term (phone,telefon).
+
+Expected Result: The system should return results quickly, even with a large dataset.
